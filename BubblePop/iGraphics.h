@@ -1,7 +1,11 @@
-
-
-#ifndef IGRAPHICS_H
-#define IGRAPHICS_H
+//
+//  Original Author: S. M. Shahriar Nirjon
+//
+//  Last Modified by: Mr. Mohammad Imrul Jubair [Assistant Professor (AUST CSE)]
+//  Last Updated: 16 December 2017 
+//
+//  Version: 4.0
+//
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -45,11 +49,11 @@ static void  __stdcall iA9(HWND,unsigned int, unsigned int, unsigned long){if(!i
 static void  __stdcall keypressHandler(HWND, unsigned int, unsigned int, unsigned long){ fixedUpdate(); }
 
 int isKeyPressed(unsigned char key) {
-    return keyPressed[key];
+	return keyPressed[key];
 }
 
 int isSpecialKeyPressed(unsigned char key) {
-    return specialKeyPressed[key];
+	return specialKeyPressed[key];
 }
 
 int iSetTimer(int msec, void (*f)(void))
@@ -90,6 +94,22 @@ void iResumeTimer(int index){
     }
 }
 
+//
+// Puts a BMP image on screen
+//
+// parameters:
+//  x - x coordinate
+//  y - y coordinate
+//  filename - name of the BMP file
+//  ignoreColor - A specified color that should not be rendered. If you have an
+//                image strip that should be rendered on top of another back
+//                ground image, then the background of the image strip should
+//                not get rendered. Use the background color of the image strip
+//                in ignoreColor parameter. Then the strip's background does
+//                not get rendered.
+//
+//                To disable this feature, put -1 in this parameter
+//
 void iShowBMP2(int x, int y, char filename[], int ignoreColor)
 {
     AUX_RGBImageRec *TextureImage;
@@ -123,99 +143,95 @@ void iShowBMP2(int x, int y, char filename[], int ignoreColor)
 
 void iShowBMP(int x, int y, char filename[])
 {
-    iShowBMP2(x, y, filename, -1);
+    iShowBMP2(x, y, filename, -1 /* ignoreColor */);
 }
 
 unsigned int iLoadImage(char filename[])
 {
-    int width, height, bpp;
+	int width, height, bpp;
 
-    unsigned int texture;
+	unsigned int texture;
 
-    BYTE* data(0);
-    data = stbi_load(filename, &width, &height, &bpp, 4);
+	BYTE* data(0);
+	data = stbi_load(filename, &width, &height, &bpp, 4);
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D,
+		0,
+		GL_RGBA,
+		width, height,
+		0,
+		GL_RGBA,
+		GL_UNSIGNED_BYTE,
+		data);
 
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+	stbi_image_free(data);
 
-    glTexImage2D(GL_TEXTURE_2D,
-        0,
-        GL_RGBA,
-        width, height,
-        0,
-        GL_RGBA,
-        GL_UNSIGNED_BYTE,
-        data);
-
-    stbi_image_free(data);
-
-    return texture;
+	return texture;
 }
 
 void iShowImage(int x, int y, int width, int height, unsigned int texture)
 {
-    glEnable(GL_TEXTURE_2D);
 
-    glBindTexture(GL_TEXTURE_2D, texture);
+	glEnable(GL_TEXTURE_2D);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glBegin(GL_QUADS);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
-        glTexCoord2f(0, 0);
-        glVertex2f(x, y);
+	glBegin(GL_QUADS);
 
-        glTexCoord2f(1, 0);
-        glVertex2f(x + width, y);
+		glTexCoord2f(0, 0);
+		glVertex2f(x, y);
 
-        glTexCoord2f(1, -1);
-        glVertex2f(x + width, y+height);
+		glTexCoord2f(1, 0);
+		glVertex2f(x + width, y);
 
-        glTexCoord2f(0, -1);
-        glVertex2f(x, y + height);
+		glTexCoord2f(1, -1);
+		glVertex2f(x + width, y+height);
 
-    glEnd();
+		glTexCoord2f(0, -1);
+		glVertex2f(x, y + height);
 
-    glDisable(GL_TEXTURE_2D);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+
 }
 
 void iGetPixelColor (int cursorX, int cursorY, int rgb[])
 {
     GLubyte pixel[3];
-
     glReadPixels(cursorX, cursorY,1,1,
         GL_RGB,GL_UNSIGNED_BYTE,(void *)pixel);
 
     rgb[0] = pixel[0];
     rgb[1] = pixel[1];
     rgb[2] = pixel[2];
+
+    //printf("%d %d %d\n",pixel[0],pixel[1],pixel[2]);
 }
 
-void iText(GLdouble x, GLdouble y, const char *str, void* font=GLUT_BITMAP_8_BY_13)
+void iText(GLdouble x, GLdouble y, char *str, void* font=GLUT_BITMAP_8_BY_13)
 {
     glRasterPos3d(x, y, 0);
-
     int i;
-
     for (i=0; str[i]; i++) {
-        glutBitmapCharacter(font, str[i]);
+        glutBitmapCharacter(font, str[i]); //,GLUT_BITMAP_8_BY_13, GLUT_BITMAP_TIMES_ROMAN_24
     }
 }
 
 void iPoint(double x, double y, int size=0)
 {
     int i, j;
-
     glBegin(GL_POINTS);
-
     glVertex2f(x, y);
-
     for(i=x-size;i<x+size;i++)
     {
         for(j=y-size; j<y+size;j++)
@@ -223,49 +239,37 @@ void iPoint(double x, double y, int size=0)
             glVertex2f(i, j);
         }
     }
-
     glEnd();
 }
 
 void iLine(double x1, double y1, double x2, double y2)
 {
     glBegin(GL_LINE_STRIP);
-
     glVertex2f(x1, y1);
     glVertex2f(x2, y2);
-
     glEnd();
 }
 
 void iFilledPolygon(double x[], double y[], int n)
 {
     int i;
-
     if(n<3)return;
-
     glBegin(GL_POLYGON);
-
     for(i = 0; i < n; i++){
         glVertex2f(x[i], y[i]);
     }
-
     glEnd();
 }
 
 void iPolygon(double x[], double y[], int n)
 {
     int i;
-
     if(n<3)return;
-
     glBegin(GL_LINE_STRIP);
-
     for(i = 0; i < n; i++){
         glVertex2f(x[i], y[i]);
     }
-
     glVertex2f(x[0], y[0]);
-
     glEnd();
 }
 
@@ -309,42 +313,33 @@ void iFilledRectangle(double left, double bottom, double dx, double dy)
 void iFilledCircle(double x, double y, double r, int slices=100)
 {
     double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-
     dt = 2*PI/slices;
     xp = x+r;
     yp = y;
-
     glBegin(GL_POLYGON);
-
     for(t = 0; t <= 2*PI; t+=dt)
     {
         x1 = x + r * cos(t);
         y1 = y + r * sin(t);
 
         glVertex2f(xp, yp);
-
         xp = x1;
         yp = y1;
     }
-
     glEnd();
 }
 
 void iCircle(double x, double y, double r, int slices=100)
 {
     double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-
     dt = 2*PI/slices;
     xp = x+r;
     yp = y;
-
     for(t = 0; t <= 2*PI; t+=dt)
     {
         x1 = x + r * cos(t);
         y1 = y + r * sin(t);
-
         iLine(xp, yp, x1, y1);
-
         xp = x1;
         yp = y1;
     }
@@ -353,18 +348,14 @@ void iCircle(double x, double y, double r, int slices=100)
 void iEllipse(double x, double y, double a, double b, int slices=100)
 {
     double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-
     dt = 2*PI/slices;
     xp = x+a;
     yp = y;
-
     for(t = 0; t <= 2*PI; t+=dt)
     {
         x1 = x + a * cos(t);
         y1 = y + b * sin(t);
-
         iLine(xp, yp, x1, y1);
-
         xp = x1;
         yp = y1;
     }
@@ -373,72 +364,70 @@ void iEllipse(double x, double y, double a, double b, int slices=100)
 void iFilledEllipse(double x, double y, double a, double b, int slices=100)
 {
     double t, PI=acos(-1.0), dt, x1,y1, xp, yp;
-
     dt = 2*PI/slices;
     xp = x+a;
     yp = y;
-
     glBegin(GL_POLYGON);
-
     for(t = 0; t <= 2*PI; t+=dt)
     {
         x1 = x + a * cos(t);
         y1 = y + b * sin(t);
-
         glVertex2f(xp, yp);
-
         xp = x1;
         yp = y1;
     }
-
     glEnd();
 }
 
+// Rotates the co-ordinate system
+// Parameters:
+//  (x, y) - The pivot point for rotation
+//  degree - degree of rotation
+//
+// After calling iRotate(), evrey subsequent rendering will
+// happen in rotated fashion. To stop rotation of subsequent rendering,
+// call iUnRotate(). Typical call pattern would be:
+//      iRotate();
+//      Render your objects, that you want rendered as rotated
+//      iUnRotate();
+//
 void iRotate(double x, double y, double degree)
 {
-    glPushMatrix();
+	glPushMatrix();
 
-    glTranslatef(x, y, 0.0);
+	glTranslatef(x, y, 0.0);
 
-    glRotatef(degree, 0, 0, 1.0);
+	glRotatef(degree, 0, 0, 1.0);
 
-    glTranslatef(-x, -y, 0.0);
+	glTranslatef(-x, -y, 0.0);
 }
 
 void iUnRotate()
 {
-    glPopMatrix();
+	glPopMatrix();
 }
 
 void iSetColor(double r, double g, double b)
 {
     double mmx;
-
     mmx = r;
-
     if(g > mmx)mmx = g;
     if(b > mmx)mmx = b;
-
     mmx = 255;
-
     if(mmx > 0){
         r /= mmx;
         g /= mmx;
         b /= mmx;
     }
-
     glColor3f(r, g, b);
 }
 
 void iDelay(int sec)
 {
     int t1, t2;
-
     t1 = time(0);
-
     while(1){
         t2 = time(0);
-
         if(t2-t1>=sec)
             break;
     }
@@ -446,29 +435,23 @@ void iDelay(int sec)
 
 void iDelayMS(int msec)
 {
-    clock_t end;
-
-    end = clock() + msec * CLOCKS_PER_SEC / 1000;
-
-    while (end > clock());
+	clock_t end;
+	end = clock() + msec * CLOCKS_PER_SEC / 1000;
+	while (end > clock());
 }
 
 void iClear()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    glMatrixMode(GL_MODELVIEW);
-
+    glClear(GL_COLOR_BUFFER_BIT) ;
+    glMatrixMode(GL_MODELVIEW) ;
     glClearColor(0,0,0,0);
-
     glFlush();
 }
 
-void displayFF(void)
-{
-    iDraw();
+void displayFF(void){
 
-    glutSwapBuffers();
+    iDraw();
+    glutSwapBuffers() ;
 }
 
 void animFF(void)
@@ -477,43 +460,35 @@ void animFF(void)
         ifft = 1;
         iClear();
     }
-
     glutPostRedisplay();
 }
 
 void keyboardHandlerUp1FF(unsigned char key, int x, int y)
 {
-    keyPressed[key] = 0;
-
+	keyPressed[key] = 0;
     glutPostRedisplay();
 }
-
 void keyboardHandlerUp2FF(int key, int x, int y)
 {
-    specialKeyPressed[key] = 0;
-
+	specialKeyPressed[key] = 0;
     glutPostRedisplay();
 }
 
 void keyboardHandler1FF(unsigned char key, int x, int y)
 {
-    keyPressed[key] = 1;
-
-    glutPostRedisplay();
+	keyPressed[key] = 1;
+	glutPostRedisplay();
 }
-
 void keyboardHandler2FF(int key, int x, int y)
 {
-    specialKeyPressed[key] = 1;
-
-    glutPostRedisplay();
+	specialKeyPressed[key] = 1;
+	glutPostRedisplay();
 }
 
 void mouseMoveHandlerFF(int mx, int my)
 {
     iMouseX = mx;
     iMouseY = iScreenHeight - my;
-
     iMouseMove(iMouseX, iMouseY);
 
     glFlush();
@@ -521,12 +496,11 @@ void mouseMoveHandlerFF(int mx, int my)
 
 void mousePassiveMoveHandlerFF(int mx, int my)
 {
-    iMouseX = mx;
-    iMouseY = iScreenHeight - my;
+	iMouseX = mx;
+	iMouseY = iScreenHeight - my;
+	iPassiveMouseMove(iMouseX, iMouseY);
 
-    iPassiveMouseMove(iMouseX, iMouseY);
-
-    glFlush();
+	glFlush();
 }
 
 void mouseHandlerFF(int button, int state, int x, int y)
@@ -541,51 +515,46 @@ void mouseHandlerFF(int button, int state, int x, int y)
 
 void iInitialize(int width=500, int height=500, char *title="iGraphics", int keyboardSamplingRate = 16)
 {
-    SetTimer(0, 0, keyboardSamplingRate, keypressHandler);
+	SetTimer(0, 0, keyboardSamplingRate, keypressHandler);
 
     iScreenHeight = height;
     iScreenWidth = width;
 
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_ALPHA) ;
+    glutInitWindowSize(width , height ) ;
+    glutInitWindowPosition( 10 , 10 ) ;
+    glutCreateWindow(title) ;
+    glClearColor( 0.0 , 0.0 , 0.0 , 0.0 ) ;
+    glMatrixMode( GL_PROJECTION) ;
+    glLoadIdentity() ;
+    glOrtho(0.0 , width , 0.0 , height , -1.0 , 1.0) ;
+    //glOrtho(-100.0 , 100.0 , -100.0 , 100.0 , -1.0 , 1.0) ;
+    //SetTimer(0, 0, 10, timer_proc);
 
-    glutInitWindowSize(width , height);
 
-    glutInitWindowPosition(10 , 10);
-
-    glutCreateWindow(title);
-
-    glClearColor(0.0 , 0.0 , 0.0 , 0.0);
-
-    glMatrixMode(GL_PROJECTION);
-
-    glLoadIdentity();
-
-    glOrtho(0.0 , width , 0.0 , height , -1.0 , 1.0);
 }
 
 void iStart()
 {
     iClear();
 
-    glutDisplayFunc(displayFF);
-
-    glutKeyboardFunc(keyboardHandler1FF);
-    glutSpecialFunc(keyboardHandler2FF);
-
-    glutKeyboardUpFunc(keyboardHandlerUp1FF);
-    glutSpecialUpFunc(keyboardHandlerUp2FF);
-
+    glutDisplayFunc(displayFF) ;
+    glutKeyboardFunc(keyboardHandler1FF); //normal
+    glutSpecialFunc(keyboardHandler2FF); //special keys
+	glutKeyboardUpFunc(keyboardHandlerUp1FF);
+	glutSpecialUpFunc(keyboardHandlerUp2FF);
     glutMouseFunc(mouseHandlerFF);
-
     glutMotionFunc(mouseMoveHandlerFF);
-    glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
+	glutPassiveMotionFunc(mousePassiveMoveHandlerFF);
+    glutIdleFunc(animFF) ;
 
-    glutIdleFunc(animFF);
-
+    //
+    // Setup Alpha channel testing.
+    // If alpha value is greater than 0, then those
+    // pixels will be rendered. Otherwise, they would not be rendered
+    //
     glAlphaFunc(GL_GREATER,0.0f);
     glEnable(GL_ALPHA_TEST);
 
     glutMainLoop();
 }
-
-#endif

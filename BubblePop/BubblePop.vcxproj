@@ -46,7 +46,6 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -64,15 +63,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="iMain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="bullet.h" />
-    <ClInclude Include="character.h" />
-    <ClInclude Include="drone.h" />
-    <ClInclude Include="iGraphics.h" />
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="obstacle.h" />
-    <ClInclude Include="profile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

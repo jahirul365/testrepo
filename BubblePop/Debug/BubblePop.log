@@ -1,19 +1,9 @@
-﻿Build started 9/22/2026 4:20:56 AM.
-     1>Project "E:\escape protocol-20260921T174354Z-1-001\escape protocol\BubblePop\BubblePop.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt iMain.cpp
-         iMain.cpp
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\menu.h(277): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\imain.cpp(763): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\imain.cpp(764): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\imain.cpp(765): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\imain.cpp(766): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-     1>e:\escape protocol-20260921t174354z-1-001\escape protocol\bubblepop\imain.cpp(833): warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\escape protocol-20260921T174354Z-1-001\escape protocol\Debug\BubblePop.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"E:\escape protocol-20260921T174354Z-1-001\escape protocol\Debug\BubblePop.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\escape protocol-20260921T174354Z-1-001\escape protocol\Debug\BubblePop.lib" /MACHINE:X86 Debug\iMain.obj
-         BubblePop.vcxproj -> E:\escape protocol-20260921T174354Z-1-001\escape protocol\Debug\BubblePop.exe
-     1>Done Building Project "E:\escape protocol-20260921T174354Z-1-001\escape protocol\BubblePop\BubblePop.vcxproj" (Build target(s)).
+﻿Build started 9/22/2026 5:45:59 PM.
+     1>Project "E:\Extra\Game_all_documents\Escape-Protocol\Game_Project\BubblePop\BubblePop.vcxproj" on node 2 (Build target(s)).
+     1>Link:
+         BubblePop.vcxproj -> E:\Extra\Game_all_documents\Escape-Protocol\Game_Project\Debug\BubblePop.exe
+     1>Done Building Project "E:\Extra\Game_all_documents\Escape-Protocol\Game_Project\BubblePop\BubblePop.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.79
+Time Elapsed 00:00:00.35
